@@ -1,9 +1,9 @@
 const express = require('express');
 const router = require('./src/route/api');
-const app = new express();
-const bodyPerser = require('body-parser');
+const app = express(); // No need to use 'new'
+const bodyParser = require('body-parser'); // Fixed typo
 
-//Security Middleware
+// Security Middleware
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
@@ -11,21 +11,25 @@ const xss = require('xss-clean');
 const hpp = require('hpp');
 const cors = require('cors');
 
-//Database Middleware
-const mongoose = require('mongoose');
-
-//Security Middleware Implement
+// Apply Security Middleware
 app.use(cors());
 app.use(helmet());
 app.use(mongoSanitize());
 app.use(xss());
 app.use(hpp());
 
-//Body perser Impletent
-app.use(bodyPerser.json());
+// Body Parser Implementation
+app.use(bodyParser.json());
 
-//Rate Limiter
+// Rate Limiter
 const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000, 
-    max: 300 // 
-  });
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 300 // Limit each IP to 300 requests per windowMs
+});
+app.use(limiter); // Attach rate limiter to the app
+
+// API Routes
+app.use("/api/v1", router);
+
+// Export the app instance
+module.exports = app;
