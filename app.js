@@ -10,6 +10,7 @@ const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
 const cors = require('cors');
+const { path } = require('express/lib/application');
 
 // Apply Security Middleware
 app.use(cors());
@@ -28,7 +29,16 @@ const limiter = rateLimit({
 });
 app.use(limiter); // Attach rate limiter to the app
 
-// API Routes
+
+//Managin Frontend Routing
+app.use(express.static('client/build'))
+
+app.get("*", function (req, res) {
+    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+});
+
+
+// Managing Backend API Routing
 app.use("/api/v1", router);
 
 // Export the app instance
