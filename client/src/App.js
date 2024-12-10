@@ -2,7 +2,7 @@
 function App() {
   return (
     <div className="App">
-      <h1>My MERN Frontend</h1>
+      <h1>My MERN Project</h1>
     </div>
   );
 }
